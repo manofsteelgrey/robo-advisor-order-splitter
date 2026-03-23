@@ -10,6 +10,10 @@ export class OrdersService {
   constructor(private configService: ConfigService) {}
 
   createOrder(createOrderDto: CreateOrderDto) {
+    if (!createOrderDto.portfolio.length) {
+        throw new BadRequestException('Portfolio cannot be empty');
+    }
+
     const totalWeight = createOrderDto.portfolio.reduce(
         (sum, item) => sum + item.weight,
         0,
@@ -17,6 +21,14 @@ export class OrdersService {
 
     if (Math.abs(totalWeight - 1) > 0.0001) {
         throw new BadRequestException('Portfolio weights must sum to 1');
+    }
+
+    if (createOrderDto.prices) {
+        for (const key in createOrderDto.prices) {
+          if (createOrderDto.prices[key] <= 0) {
+            throw new BadRequestException(`Invalid price for ${key}`);
+          }
+        }
     }
 
     const decimalPlaces = this.configService.get<number>('DECIMAL_PLACES') || 3;
@@ -28,6 +40,10 @@ export class OrdersService {
 
         const stockPrice =
             createOrderDto.prices?.[item.symbol] ?? defaultPrice;
+
+        if (stockPrice <= 0) {
+            throw new BadRequestException(`Invalid price for ${item.symbol}`);
+        }
 
         const sharesTobeBought = parseFloat(
             (investmentAmount / stockPrice).toFixed(decimalPlaces),
