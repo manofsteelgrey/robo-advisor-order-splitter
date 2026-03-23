@@ -2,6 +2,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { ConfigService } from '@nestjs/config';
 import { v4 as uuidv4 } from 'uuid';
+import { OrderStatus } from './types/order.types';
 
 @Injectable()
 export class OrdersService {
@@ -51,6 +52,7 @@ export class OrdersService {
 
         return {
             id: uuidv4(),
+            orderStatus: OrderStatus.PENDING,
             symbol: item.symbol,
             type: createOrderDto.orderType,
             amount: investmentAmount,
