@@ -14,7 +14,7 @@ async function bootstrap() {
     }),
   );
 
-  app.useGlobalInterceptors(new LoggingInterceptor()); // 🔥 THIS IS IMPORTANT
+  app.useGlobalInterceptors(new LoggingInterceptor());
 
   await app.listen(process.env.PORT || 3000);
 }
