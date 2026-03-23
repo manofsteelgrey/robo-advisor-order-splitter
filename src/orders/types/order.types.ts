@@ -10,3 +10,19 @@ export enum OrderStatus {
   SUCCESS = 'SUCCESS',
   FAILED = 'FAILED',
 }
+
+export interface StockOrder {
+  id: string;
+  orderStatus: OrderStatus;
+  symbol: string;
+  type: OrderType;
+  amount: number;
+  price: number;
+  shares: number;
+}
+
+export interface CreateOrderResponse {
+  executionTime: string;
+  orders: StockOrder[];
+  createdAt: Date;
+}
